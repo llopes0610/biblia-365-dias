@@ -55,60 +55,31 @@ export default function RegisterPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-3">
-          <input
-            name="name"
-            placeholder="Nome completo"
-            value={form.name}
-            onChange={handleChange}
-            className="w-full rounded-lg border px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-600"
-            required
-          />
-
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full rounded-lg border px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-600"
-            required
-          />
-
-          <input
-            name="phone"
-            placeholder="Telefone (opcional)"
-            value={form.phone}
-            onChange={handleChange}
-            className="w-full rounded-lg border px-4 py-3 text-sm"
-          />
-
-          <input
-            name="church"
-            placeholder="Igreja (opcional)"
-            value={form.church}
-            onChange={handleChange}
-            className="w-full rounded-lg border px-4 py-3 text-sm"
-          />
-
-          <input
-            type="password"
-            name="password"
-            placeholder="Senha"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full rounded-lg border px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-600"
-            required
-          />
-
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirmar senha"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            className="w-full rounded-lg border px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-600"
-            required
-          />
+          {[
+            { name: "name", placeholder: "Nome completo" },
+            { name: "email", placeholder: "Email", type: "email" },
+            { name: "phone", placeholder: "Telefone (opcional)" },
+            { name: "church", placeholder: "Igreja (opcional)" },
+            { name: "password", placeholder: "Senha", type: "password" },
+            { name: "confirmPassword", placeholder: "Confirmar senha", type: "password" },
+          ].map((field) => (
+            <input
+              key={field.name}
+              type={field.type ?? "text"}
+              name={field.name}
+              placeholder={field.placeholder}
+              value={(form as any)[field.name]}
+              onChange={handleChange}
+              className="
+                w-full rounded-lg border border-zinc-300
+                px-4 py-3 text-sm
+                text-zinc-900
+                placeholder:text-zinc-400
+                focus:outline-none focus:ring-2 focus:ring-emerald-600
+              "
+              required={field.name.includes("password") || field.name === "name" || field.name === "email"}
+            />
+          ))}
 
           <button
             type="submit"
