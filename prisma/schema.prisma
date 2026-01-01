@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String?
+  church    String?
+  createdAt DateTime @default(now())
+
+  completions UserCompletion[]
+}
+
+model ReadingPlanDay {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  dayLabel  String
+  chapters  Int
+
+  readings  ReadingItem[]
+  completed UserCompletion[]
+}
+
+model ReadingItem {
+  id        String @id @default(cuid())
+  order     Int
+  reference String
+
+  planDayId String
+  planDay   ReadingPlanDay @relation(fields: [planDayId], references: [id])
+}
+
+model UserCompletion {
+  id          String   @id @default(cuid())
+  userId      String
+  planDayId   String
+  completedAt DateTime @default(now())
+  points      Int      @default(10)
+
+  user    User            @relation(fields: [userId], references: [id])
+  planDay ReadingPlanDay  @relation(fields: [planDayId], references: [id])
+
+  @@unique([userId, planDayId])
+}
