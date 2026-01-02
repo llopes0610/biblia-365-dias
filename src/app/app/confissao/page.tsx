@@ -24,7 +24,8 @@ export default async function ConfissaoIndex() {
 
   return (
     <div className="mx-auto w-full max-w-md space-y-4">
-      <header className="rounded-2xl bg-white p-5 shadow-sm border">
+      {/* HEADER */}
+      <header className="rounded-2xl bg-white p-5 shadow-sm border space-y-1">
         <h1 className="text-lg font-semibold text-zinc-900">
           Confissão de Fé de Westminster
         </h1>
@@ -33,6 +34,23 @@ export default async function ConfissaoIndex() {
         </p>
       </header>
 
+      {/* AVISO DE REVISÃO */}
+      <div className="rounded-xl bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-800">
+        <p className="leading-relaxed">
+          Esta seção encontra-se em processo de{" "}
+          <strong>revisão e organização</strong>, visando preservar a
+          fidelidade histórica e doutrinária da Confissão de Fé de
+          Westminster.
+        </p>
+
+        <p className="mt-2 leading-relaxed">
+          Em breve, todo o conteúdo será disponibilizado de forma
+          completa, revisada e cuidadosamente apresentada para a
+          edificação da igreja.
+        </p>
+      </div>
+
+      {/* LISTA DE CAPÍTULOS */}
       {chapters.map((chapter) => (
         <Link
           key={chapter.id}
