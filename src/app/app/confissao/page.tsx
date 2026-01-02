@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { getAllBooks } from "@/lib/confessions/books";
 
 export default function ConfissaoHome() {
+  const books = getAllBooks();
+
   return (
     <div className="mx-auto w-full max-w-md space-y-4">
       {/* HEADER */}
@@ -18,24 +21,25 @@ export default function ConfissaoHome() {
         <p>
           As <strong>confissões e catecismos reformados</strong> não
           substituem as Escrituras, mas servem como um{" "}
-          <strong>resumo fiel, bíblico e histórico</strong> daquilo que a
-          igreja cristã crê, ensina e confessa com base na Palavra de Deus.
+          <strong>resumo fiel, bíblico e histórico</strong> da fé cristã,
+          elaborado pela igreja ao longo da história.
         </p>
 
         <p>
-          Esses documentos foram elaborados por pastores e teólogos com o
-          propósito de preservar a doutrina bíblica, instruir o povo de Deus
-          e promover unidade, clareza e maturidade espiritual na igreja.
+          Esses documentos auxiliam a igreja na preservação da doutrina,
+          na instrução dos fiéis e na unidade confessional, sempre
+          submetidos à autoridade suprema da Palavra de Deus.
         </p>
 
         <p>
-          Ao estudá-los, somos auxiliados a compreender melhor as grandes
-          verdades da fé cristã — quem Deus é, quem nós somos, a obra de
-          Cristo, a salvação, a vida cristã e a esperança eterna.
+          Ao estudá-los, somos ajudados a compreender melhor as grandes
+          verdades da fé cristã — Deus, o homem, Cristo, a salvação e a
+          vida cristã.
         </p>
 
         <p className="italic text-zinc-600">
-          “Tudo deve ser examinado à luz das Escrituras.”
+          "A igreja é edificada quando confessa com clareza aquilo que
+          crê."
         </p>
       </div>
 
@@ -43,47 +47,28 @@ export default function ConfissaoHome() {
       <div className="rounded-xl bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-800">
         <p className="leading-relaxed">
           Esta seção está sendo organizada com zelo teológico e fidelidade
-          histórica. O conteúdo será disponibilizado progressivamente, de
-          forma estruturada e revisada.
+          histórica. O conteúdo será disponibilizado capítulo por
+          capítulo, de forma progressiva e estruturada.
         </p>
       </div>
 
-      {/* LIVROS */}
-      <Link
-        href="/app/confissao/confissao-westminster"
-        className="block rounded-2xl bg-white p-4 border transition hover:bg-zinc-50"
-      >
-        <p className="text-sm font-semibold text-zinc-900">
-          📘 Confissão de Fé de Westminster
-        </p>
-        <p className="mt-1 text-xs text-zinc-600">
-          Síntese doutrinária da fé reformada
-        </p>
-      </Link>
-
-      <Link
-        href="/app/confissao/catecismo-maior"
-        className="block rounded-2xl bg-white p-4 border transition hover:bg-zinc-50"
-      >
-        <p className="text-sm font-semibold text-zinc-900">
-          📗 Catecismo Maior de Westminster
-        </p>
-        <p className="mt-1 text-xs text-zinc-600">
-          Exposição detalhada da doutrina cristã
-        </p>
-      </Link>
-
-      <Link
-        href="/app/confissao/breve-catecismo"
-        className="block rounded-2xl bg-white p-4 border transition hover:bg-zinc-50"
-      >
-        <p className="text-sm font-semibold text-zinc-900">
-          📙 Breve Catecismo de Westminster
-        </p>
-        <p className="mt-1 text-xs text-zinc-600">
-          Fundamentos da fé cristã em perguntas e respostas
-        </p>
-      </Link>
+      {/* LIVROS DINÂMICOS */}
+      <div className="space-y-3">
+        {books.map((book) => (
+          <Link
+            key={book.slug}
+            href={`/app/confissao/${book.slug}`}
+            className="block rounded-2xl bg-white p-4 border transition hover:bg-zinc-50"
+          >
+            <p className="text-sm font-semibold text-zinc-900">
+              {book.icon} {book.label}
+            </p>
+            <p className="mt-1 text-xs text-zinc-600">
+              {book.description}
+            </p>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
