@@ -24,3 +24,40 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* Modo leitura */
+.reading-mode {
+  background-color: #f8f5ef; /* bege papel */
+  color: #2b2b2b;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  line-height: 1.85;
+  font-size: 1.05rem;
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+}
+
+/* Parágrafos */
+.reading-mode p {
+  margin-bottom: 1.25rem;
+}
+
+/* Títulos */
+.reading-mode h2 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Numeração de seções */
+.reading-mode .section-number {
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+/* Seleção de texto */
+.reading-mode ::selection {
+  background: #d6e4d2;
+}
