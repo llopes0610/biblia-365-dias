@@ -1,6 +1,6 @@
 {
   "packageId": "br.com.ipbocian.biblia365",
-  "host": "biblia-365-dias.vercel.app",
+  "host": "www.biblia365dias.com.br",
   "name": "Bíblia 365 Dias",
   "launcherName": "Bíblia 365",
   "display": "standalone",
@@ -12,19 +12,19 @@
   "navigationDividerColorDark": "#000000",
   "backgroundColor": "#16A34A",
   "enableNotifications": true,
-  "startUrl": "/login",
-  "iconUrl": "https://biblia-365-dias.vercel.app/icons/icon-512.png",
-  "maskableIconUrl": "https://biblia-365-dias.vercel.app/icons/maskable-icon.png",
+  "startUrl": "/",
+  "iconUrl": "https://www.biblia365dias.com.br/icons/icon-512.png",
+  "maskableIconUrl": "https://www.biblia365dias.com.br/icons/maskable-icon.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "C:\\biblia-em-um-ano\\android\\android.keystore",
     "alias": "biblia365"
   },
-  "appVersionName": "1",
-  "appVersionCode": 1,
+  "appVersionName": "1.0.1",
+  "appVersionCode": 3,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://biblia-365-dias.vercel.app/manifest.json",
+  "webManifestUrl": "https://www.biblia365dias.com.br/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -33,7 +33,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://biblia-365-dias.vercel.app/",
+  "fullScopeUrl": "https://www.biblia365dias.com.br/",
   "minSdkVersion": 21,
   "orientation": "portrait",
   "fingerprints": [],
@@ -43,5 +43,5 @@
   "fileHandlers": [],
   "launchHandlerClientMode": "",
   "displayOverride": [],
-  "appVersion": "1"
+  "appVersion": "1.0.1"
 }

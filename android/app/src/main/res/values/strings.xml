@@ -34,7 +34,7 @@
         \"relation\": [\"delegate_permission/common.handle_all_urls\"],
         \"target\": {
             \"namespace\": \"web\",
-            \"site\": \"https://biblia-365-dias.vercel.app\"
+            \"site\": \"https://www.biblia365dias.com.br\"
         }
     }]
     

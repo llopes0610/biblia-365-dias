@@ -17,18 +17,18 @@
         \"relation\": [\"delegate_permission/common.handle_all_urls\"],
         \"target\": {
             \"namespace\": \"web\",
-            \"site\": \"https://biblia-365-dias.vercel.app\"
+            \"site\": \"https://www.biblia365dias.com.br\"
         }
     }]
     
   </string>
     <string name="fallbackType" translatable="false">customtabs</string>
-    <string name="fullScopeUrl" translatable="false">https://biblia-365-dias.vercel.app/</string>
+    <string name="fullScopeUrl" translatable="false">https://www.biblia365dias.com.br/</string>
     <string name="generatorApp" translatable="false">bubblewrap-cli</string>
-    <string name="hostName" translatable="false">biblia-365-dias.vercel.app</string>
-    <string name="launchUrl" translatable="false">https://biblia-365-dias.vercel.app/login</string>
+    <string name="hostName" translatable="false">www.biblia365dias.com.br</string>
+    <string name="launchUrl" translatable="false">https://www.biblia365dias.com.br/</string>
     <string name="launcherName" translatable="false">Bíblia 365</string>
     <string name="orientation" translatable="false">portrait</string>
     <string name="providerAuthority" translatable="false">br.com.ipbocian.biblia365.fileprovider</string>
-    <string name="webManifestUrl" translatable="false">https://biblia-365-dias.vercel.app/manifest.json</string>
+    <string name="webManifestUrl" translatable="false">https://www.biblia365dias.com.br/manifest.json</string>
 </resources>
