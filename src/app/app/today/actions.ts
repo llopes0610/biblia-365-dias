@@ -18,15 +18,16 @@ export async function markDayAsCompleted(planDayId: string) {
     throw new Error("Usuário não encontrado");
   }
 
-  // Evita duplicidade (além do @@unique)
-  const alreadyCompleted = await prisma.userCompletion.findUnique({
-    where: {
-      userId_planDayId: {
-        userId: user.id,
-        planDayId,
+  // 🔒 Evita duplicidade
+  const alreadyCompleted =
+    await prisma.userCompletion.findUnique({
+      where: {
+        userId_planDayId: {
+          userId: user.id,
+          planDayId,
+        },
       },
-    },
-  });
+    });
 
   if (alreadyCompleted) {
     return { ok: true, already: true };
@@ -36,7 +37,7 @@ export async function markDayAsCompleted(planDayId: string) {
     data: {
       userId: user.id,
       planDayId,
-      points: 10,
+      points: 10, // mantém para futuras gamificações
     },
   });
 

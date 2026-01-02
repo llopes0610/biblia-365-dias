@@ -3,29 +3,24 @@ import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { calculateStreak } from "@/lib/streak";
-import { getSpiritualLevel } from "@/lib/spiritualLevel";
+import { getSpiritualProgress } from "@/lib/spiritualLevel";
+import { getAchievements } from "@/lib/achievements";
 import { shouldRemindToday } from "@/lib/reminder";
 import MarkAsReadButton from "./MarkAsReadButton";
 import BottomNav from "@/components/BottomNav";
 
 export default async function TodayPage() {
-  // 🔐 Sessão
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) redirect("/login");
 
-  // 👤 Usuário
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
   });
   if (!user) redirect("/login");
 
-  // 📖 Dias concluídos
   const completions = await prisma.userCompletion.findMany({
     where: { userId: user.id },
-    select: {
-      planDayId: true,
-      completedAt: true,
-    },
+    select: { planDayId: true, completedAt: true },
     orderBy: { completedAt: "desc" },
   });
 
@@ -33,7 +28,6 @@ export default async function TodayPage() {
     (c) => c.planDayId
   );
 
-  // 👉 Próximo dia NÃO lido do plano
   const day = await prisma.readingPlanDay.findFirst({
     where: {
       id: {
@@ -43,42 +37,42 @@ export default async function TodayPage() {
       },
     },
     orderBy: { date: "asc" },
-    include: {
-      readings: { orderBy: { order: "asc" } },
-    },
+    include: { readings: { orderBy: { order: "asc" } } },
   });
 
-  // 🔥 Streak
+  const completedDays = completions.length;
+  const totalDays = 365;
+
+  const progressPercent = Math.min(
+    Math.round((completedDays / totalDays) * 100),
+    100
+  );
+
   const streak = calculateStreak(
     completions.map((c) => ({
       completedAt: c.completedAt,
     }))
   );
 
-  // 🔔 Lembrete (se não leu hoje)
   const shouldRemind = shouldRemindToday(completions);
 
-  // 📊 Progresso anual
-  const totalDays = 365;
-  const completedDays = completions.length;
-  const progressPercent = Math.min(
-    Math.round((completedDays / totalDays) * 100),
-    100
+  const spiritualProgress =
+    getSpiritualProgress(completedDays);
+
+  const achievements = getAchievements(
+    completedDays,
+    streak
   );
 
-  // 🏆 Nível espiritual
-  const level = getSpiritualLevel(completedDays);
-
-  // 🎉 Caso tenha concluído todo o plano
   if (!day) {
     return (
       <div className="min-h-screen bg-zinc-50 px-4 py-6 pb-24">
-        <div className="mx-auto max-w-md rounded-2xl bg-white p-6 shadow-sm border text-center space-y-3">
+        <div className="mx-auto max-w-md rounded-2xl bg-white p-6 border text-center space-y-3">
           <h1 className="text-xl font-bold text-emerald-700">
             Bíblia 365 Dias
           </h1>
           <p className="text-zinc-600">
-            🎉 Parabéns! Você concluiu todo o plano bíblico.
+            🎉 Parabéns! Você concluiu toda a Bíblia.
           </p>
         </div>
 
@@ -89,105 +83,139 @@ export default async function TodayPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 px-4 py-6 pb-24">
-      <div className="mx-auto w-full max-w-md space-y-4">
+      <div className="mx-auto max-w-md space-y-4">
         {/* HEADER */}
-        <header className="rounded-2xl bg-white p-5 shadow-sm border space-y-2">
+        <header className="rounded-2xl bg-white p-5 border space-y-2">
           <h1 className="text-xl font-bold text-emerald-700">
             Bíblia 365 Dias
           </h1>
 
-          <p className="text-sm text-zinc-600">
-            Continue sua leitura
-          </p>
-
           {streak > 0 && (
-            <div className="inline-flex items-center gap-2 rounded-full bg-orange-50 px-3 py-1 text-xs font-medium text-orange-700 border border-orange-100 w-fit">
-              🔥 {streak} dia{streak > 1 ? "s" : ""} seguido
+            <span className="inline-flex w-fit rounded-full bg-orange-50 px-3 py-1 text-xs text-orange-700 border">
+              🔥 {streak} dia
+              {streak > 1 ? "s" : ""} seguido
               {streak > 1 ? "s" : ""}
-            </div>
+            </span>
           )}
         </header>
 
-        {/* 🔔 LEMBRETE PASTORAL */}
+        {/* LEMBRETE */}
         {shouldRemind && (
-          <div className="rounded-xl bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-800">
-            ⏰ Que tal separar um momento hoje para a Palavra?
+          <div className="rounded-xl bg-amber-50 border px-4 py-3 text-sm text-amber-800">
+            ⏰ Separe hoje um momento para a Palavra.
           </div>
         )}
 
-        {/* 📊 PROGRESSO ANUAL */}
-        <div className="rounded-2xl bg-white p-5 shadow-sm border space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-zinc-800">
-              Progresso anual
-            </h3>
-            <span className="text-xs text-zinc-600">
+        {/* PROGRESSO */}
+        <div className="rounded-2xl bg-white p-5 border space-y-2">
+          <div className="flex justify-between text-xs text-zinc-600">
+            <span>
               {completedDays} / {totalDays}
             </span>
+            <span>{progressPercent}%</span>
           </div>
 
-          <div className="h-3 w-full rounded-full bg-zinc-100 overflow-hidden">
+          <div className="h-3 bg-zinc-100 rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full bg-emerald-600 transition-all"
+              className="h-full bg-emerald-600 transition-all"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-
-          <p className="text-xs text-zinc-500">
-            {progressPercent}% do plano concluído
-          </p>
         </div>
 
-        {/* 🏆 NÍVEL ESPIRITUAL */}
-        <div className="rounded-2xl bg-white p-5 shadow-sm border space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="text-lg">{level.emoji}</span>
-            <h3 className="text-sm font-semibold text-zinc-800">
-              Nível espiritual
-            </h3>
-          </div>
+        {/* NÍVEL */}
+        <div className="rounded-2xl bg-white p-5 border space-y-3">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">
+              {spiritualProgress.current.emoji}
+            </span>
 
-          <span className="inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-            {level.label}
-          </span>
-
-          <p className="text-xs text-zinc-500">
-            {level.description}
-          </p>
-        </div>
-
-        {/* 📖 LEITURA */}
-        <div className="rounded-2xl bg-white p-5 shadow-sm border space-y-4">
-          <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 className="text-lg font-semibold text-zinc-900">
-                {day.dayLabel}
-              </h2>
-              <p className="text-sm text-zinc-600">
-                Capítulos:{" "}
-                <span className="font-medium">
-                  {day.chapters}
-                </span>
+              <p className="font-semibold text-zinc-800">
+                {spiritualProgress.current.label}
+              </p>
+              <p className="text-xs text-zinc-500">
+                {spiritualProgress.current.description}
               </p>
             </div>
-
-            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">
-              Próximo
-            </span>
           </div>
+
+          {spiritualProgress.next && (
+            <>
+              <p className="text-xs text-zinc-600">
+                Próximo nível:{" "}
+                <strong>
+                  {spiritualProgress.next.label}
+                </strong>
+              </p>
+
+              <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-emerald-600 transition-all"
+                  style={{
+                    width: `${spiritualProgress.progressInLevel}%`,
+                  }}
+                />
+              </div>
+
+              <p className="text-xs text-zinc-500">
+                Faltam{" "}
+                <strong>
+                  {spiritualProgress.daysToNextLevel}
+                </strong>{" "}
+                dias
+              </p>
+            </>
+          )}
+        </div>
+
+        {/* CONQUISTAS — MOBILE */}
+        <div className="rounded-2xl bg-white p-5 border space-y-3">
+          <h3 className="text-sm font-semibold">
+            🏅 Conquistas
+          </h3>
+
+          <div className="grid grid-cols-2 gap-3">
+            {achievements.map((a) => (
+              <div
+                key={a.id}
+                className={`rounded-xl border p-4 text-center transition ${
+                  a.unlocked
+                    ? "bg-emerald-50 border-emerald-200"
+                    : "bg-zinc-100 border-zinc-200 opacity-70"
+                }`}
+              >
+                <span className="text-3xl">
+                  {a.emoji}
+                </span>
+
+                <p
+                  className={`mt-1 text-xs font-semibold ${
+                    a.unlocked
+                      ? "text-emerald-700"
+                      : "text-zinc-500"
+                  }`}
+                >
+                  {a.title}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* LEITURA DO DIA — CONTRASTE CORRIGIDO */}
+        <div className="rounded-2xl bg-white p-5 border space-y-3">
+          <h2 className="text-lg font-semibold text-zinc-900">
+            {day.dayLabel}
+          </h2>
 
           <ul className="space-y-2">
             {day.readings.map((r) => (
               <li
                 key={r.id}
-                className="flex items-center justify-between rounded-xl border bg-zinc-50 px-4 py-3"
+                className="rounded-xl bg-white border px-4 py-3 shadow-sm text-sm text-zinc-800 active:scale-[0.98] transition"
               >
-                <span className="text-sm font-medium text-zinc-800">
-                  {r.reference}
-                </span>
-                <span className="text-xs text-zinc-500">
-                  #{r.order}
-                </span>
+                {r.reference}
               </li>
             ))}
           </ul>
@@ -195,11 +223,11 @@ export default async function TodayPage() {
           <MarkAsReadButton
             planDayId={day.id}
             completed={false}
+            className="mt-3 w-full py-4 text-base"
           />
         </div>
       </div>
 
-      {/* 🧭 MENU */}
       <BottomNav />
     </div>
   );
