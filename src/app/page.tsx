@@ -10,8 +10,7 @@ export default function Home() {
             Bíblia 365 Dias
           </h1>
           <p className="text-zinc-600">
-            Leitura bíblica na progressão da história da redenção,
-            acompanhada dos Salmos
+            Plano de leitura bíblica em 365 dias
           </p>
         </header>
 
@@ -29,37 +28,37 @@ export default function Home() {
         <section className="space-y-4 text-zinc-700 text-sm leading-relaxed">
           <p>
             O <strong>Bíblia 365 Dias</strong> é um plano de leitura bíblica
-            desenvolvido para conduzir o cristão pela{" "}
-            <strong>história da redenção</strong>, seguindo a{" "}
-            <strong>progressão cronológica dos acontecimentos bíblicos</strong>,
-            ajudando a compreender o agir soberano de Deus ao longo do tempo.
+            desenvolvido para auxiliar o cristão na leitura completa das
+            Escrituras ao longo de um ano, seguindo a{" "}
+            <strong>ordem tradicional da Bíblia</strong>, do Gênesis ao
+            Apocalipse.
           </p>
 
           <p>
-            A leitura diária é acompanhada pelos{" "}
-            <strong>Salmos</strong>, que nos ensinam a responder à Palavra
-            com oração, louvor, arrependimento e confiança no Senhor,
-            formando não apenas leitores, mas adoradores.
+            As leituras são organizadas de forma{" "}
+            <strong>progressiva e pedagógica</strong>, respeitando a unidade
+            das Escrituras e conduzindo o leitor pela{" "}
+            <strong>história da redenção</strong>, revelada de maneira clara
+            e culminante em <strong>Jesus Cristo</strong>.
           </p>
 
           <p>
-            O plano respeita a sequência histórica da revelação bíblica,
-            organizando as leituras de forma pedagógica e devocional,
-            sem perder de vista a unidade das Escrituras e o centro
-            da fé cristã: <strong>Jesus Cristo</strong>.
+            Ao longo do plano, os <strong>Salmos</strong> acompanham a leitura
+            diária, ensinando-nos a responder à Palavra de Deus com oração,
+            louvor, arrependimento e confiança no Senhor.
           </p>
 
           <p>
             Este é um projeto{" "}
-            <strong>sem fins lucrativos</strong>, criado com o propósito
-            de incentivar a leitura completa da Bíblia, fortalecer os
-            cristãos na fé e servir como auxílio à{" "}
+            <strong>sem fins lucrativos</strong>, criado com o propósito de
+            incentivar a leitura completa da Bíblia, fortalecer os cristãos
+            na fé e servir como apoio à{" "}
             <strong>igreja local na obra de Cristo</strong>.
           </p>
 
           <p>
-            Caso tenha qualquer dúvida, sugestão ou deseje entrar em
-            contato, estou à disposição pelo e-mail:
+            Caso tenha qualquer dúvida, sugestão ou deseje entrar em contato,
+            estou à disposição pelo e-mail:
             <br />
             <a
               href="mailto:llopes3025@gmail.com"
