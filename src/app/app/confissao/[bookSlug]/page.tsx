@@ -5,37 +5,61 @@ import { getBookBySlug } from "@/lib/confessions/books";
 
 export default async function ConfessionalBookPage({
   params,
+  searchParams,
 }: {
-  params: Promise<{ bookSlug: string }>; // ✅ Promise no Next.js 15+
+  params: Promise<{ bookSlug: string }>;
+  searchParams?: Promise<{
+    q?: string;
+    page?: string;
+    perPage?: string;
+  }>;
 }) {
-  // ✅ Aguardar params (Next.js 15+)
+  // Next.js 15+
   const { bookSlug } = await params;
+  const sp = await searchParams;
 
-  // ✅ Buscar configuração do livro no arquivo central
+  const query = sp?.q?.trim() || "";
+  const page = Number(sp?.page || 1);
+  const perPage = Number(sp?.perPage || 10);
+
+  const from = (page - 1) * perPage;
+  const to = from + perPage - 1;
+
+  // Livro
   const book = getBookBySlug(bookSlug);
   if (!book) notFound();
 
-  // Buscar capítulos no Supabase
   const supabase = await createSupabaseServerClient();
 
-  const { data: chapters, error } = await supabase
+  // Query base
+  let request = supabase
     .from("confessional_chapters")
-    .select("id, number, title, summary")
+    .select("id, number, title, summary", { count: "exact" })
     .eq("book_id", book.id)
-    .order("order_index", { ascending: true });
+    .order("order_index", { ascending: true })
+    .range(from, to);
 
-  // Tratar erro de banco
+  // 🔍 Filtro por termo
+  if (query) {
+    request = request.or(
+      `title.ilike.%${query}%,summary.ilike.%${query}%`
+    );
+  }
+
+  const { data: chapters, error, count } = await request;
+
   if (error) {
     console.error("Erro ao buscar capítulos:", error);
     return (
       <div className="mx-auto w-full max-w-md space-y-4">
         <div className="rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-800">
-          Erro ao carregar capítulos. Por favor, tente novamente.
+          Erro ao carregar capítulos. Tente novamente.
         </div>
       </div>
     );
   }
 
+  const totalPages = count ? Math.ceil(count / perPage) : 1;
   const hasChapters = chapters && chapters.length > 0;
 
   return (
@@ -50,15 +74,48 @@ export default async function ConfessionalBookPage({
         </p>
       </header>
 
-      {/* AVISO */}
-      <div className="rounded-xl bg-amber-50 border border-amber-100 px-4 py-3 text-sm text-amber-800">
-        <p className="leading-relaxed">
-          Este conteúdo está sendo inserido capítulo por capítulo, com fidelidade
-          histórica e teológica.
-        </p>
-      </div>
+      {/* 🔍 BUSCA */}
+      <form method="GET" className="flex gap-2">
+        <input
+          type="text"
+          name="q"
+          defaultValue={query}
+          placeholder="Buscar por termo (ex: salvação)"
+          className="
+            flex-1
+            rounded-xl
+            border
+            px-3
+            py-2
+            text-sm
+            bg-white
+            text-zinc-900
+            placeholder:text-zinc-400
+            focus:outline-none
+            focus:ring-2
+            focus:ring-zinc-900
+            dark:bg-zinc-900
+            dark:text-zinc-100
+            dark:placeholder:text-zinc-400
+          "
+        />
+        <button
+          type="submit"
+          className="
+            rounded-xl
+            bg-zinc-900
+            text-white
+            px-4
+            text-sm
+            hover:bg-zinc-800
+            transition
+          "
+        >
+          Buscar
+        </button>
+      </form>
 
-      {/* LISTA DE CAPÍTULOS */}
+      {/* LISTA */}
       {hasChapters ? (
         <div className="space-y-3">
           {chapters.map((chapter) => (
@@ -82,8 +139,37 @@ export default async function ConfessionalBookPage({
           ))}
         </div>
       ) : (
-        <div className="rounded-xl bg-zinc-100 border border-zinc-200 p-4 text-sm text-zinc-600 text-center">
-          Nenhum capítulo disponível ainda.
+        <div className="rounded-xl bg-zinc-100 border p-4 text-sm text-center text-zinc-600">
+          Nenhum resultado encontrado.
+        </div>
+      )}
+
+      {/* 📄 PAGINAÇÃO */}
+      {totalPages > 1 && (
+        <div className="flex justify-between items-center pt-2">
+          {page > 1 ? (
+            <Link
+              href={`?q=${query}&page=${page - 1}&perPage=${perPage}`}
+              className="text-sm text-zinc-700 hover:underline"
+            >
+              ← Anterior
+            </Link>
+          ) : (
+            <span />
+          )}
+
+          <span className="text-xs text-zinc-500">
+            Página {page} de {totalPages}
+          </span>
+
+          {page < totalPages && (
+            <Link
+              href={`?q=${query}&page=${page + 1}&perPage=${perPage}`}
+              className="text-sm text-zinc-700 hover:underline"
+            >
+              Próxima →
+            </Link>
+          )}
         </div>
       )}
     </div>
