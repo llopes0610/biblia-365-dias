@@ -14,16 +14,6 @@ export default function Home() {
           </p>
         </header>
 
-        {/* DESTAQUE PLAY STORE */}
-        <div className="rounded-xl bg-emerald-50 border border-emerald-100 px-4 py-3 text-center">
-          <p className="text-sm font-semibold text-emerald-700">
-            📱 EM BREVE NA PLAY STORE
-          </p>
-          <p className="text-xs text-emerald-800 mt-1">
-            Aplicativo oficial em desenvolvimento
-          </p>
-        </div>
-
         {/* TEXTO INSTITUCIONAL */}
         <section className="space-y-4 text-zinc-700 text-sm leading-relaxed">
           <p>
@@ -71,6 +61,29 @@ export default function Home() {
           <p className="italic text-zinc-600">
             Que ao final deste percurso não apenas tenhamos lido a Bíblia,
             mas sejamos, pela graça de Deus, mais parecidos com Cristo.
+          </p>
+        </section>
+
+        {/* LINKS LEGAIS */}
+        <section className="border-t pt-4 space-y-2 text-sm text-zinc-600">
+          <p>
+            🔒{" "}
+            <Link
+              href="/app/politica-de-privacidade"
+              className="text-emerald-700 underline font-medium"
+            >
+              Política de Privacidade
+            </Link>
+          </p>
+
+          <p>
+            🗑️{" "}
+            <Link
+              href="/app/exclusao-de-conta"
+              className="text-emerald-700 underline font-medium"
+            >
+              Solicitar exclusão de conta
+            </Link>
           </p>
         </section>
 

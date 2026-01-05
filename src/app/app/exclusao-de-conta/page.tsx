@@ -24,7 +24,7 @@ export default function ExclusaoDeContaPage() {
       <p className="mb-4">
         Envie um e-mail para:
         <br />
-        <strong>📧 contato@biblia365dias.com.br</strong>
+        <strong>llopes3025@gmail.com</strong>
       </p>
 
       <p className="mb-4">
